@@ -38,8 +38,6 @@ export class PersonStorageGateway implements PersonRepository {
         }).catch(() => this.getError());
     }
     async savePerson(payload: SavePersonDto): Promise<ResponseApi<Person>> {
-        console.log(payload);
-        
         return await fetch('http://localhost:3000/user/', {
             method: 'POST', 
             body: JSON.stringify(payload), 
@@ -55,8 +53,6 @@ export class PersonStorageGateway implements PersonRepository {
         }).catch(() => this.getError());
     }
     async updatePerson(payload: UpdatePersonDto): Promise<ResponseApi<Person>> {
-        console.log(payload);
-        
         return await fetch(`http://localhost:3000/user/${payload.id}`, {
             method: 'PUT', 
             body: JSON.stringify(payload), 
@@ -74,21 +70,15 @@ export class PersonStorageGateway implements PersonRepository {
 
     async deletePerson(payload: number): Promise<ResponseApi<Person>> {
         console.log(payload);
-        
         return await fetch (`http://localhost:3000/user/${payload}`,{
-            method: 'DELETE',
-            body: JSON.stringify(payload),
-            headers:{
-                'Content-Type': 'application/json'
-            }
-        }).then(data => data.json()).then(()=>{
+            method: 'DELETE'
+        }).then(data => data.json()).then(({entity})=>{
             return{
-                code:200,
-                error: false,
-                message: "PERSON DELETED"
+                    code: 200,
+                    error: false,
+                    entity: entity,
+                    message: "PERSON DELETED"
             }as ResponseApi<Person>;
         }).catch(() => this.getError())
-
-
     }
 }
